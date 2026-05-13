@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход и регистрация</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+    :root {
+      --page-width: 872px;
+      --stage-width: 100%;
+      --stage-height: 100vh;
+      --side-width: 320px;
+      --surface-dark: #150412;
+      --surface: #1a0b17;
+      --line: #342425;
+      --text: #ffffff;
+      --muted: #bdaeb4;
+      --accent: #ed6c7b;
+      --accent-strong: #bd2c43;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-width: var(--stage-width);
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: var(--surface-dark);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .stage {
+      position: relative;
+      width: var(--stage-width);
+      min-height: var(--stage-height);
+      margin: 0 auto;
+      background:
+        linear-gradient(90deg, transparent 0 var(--side-width), rgba(21, 4, 18, 0.98) var(--side-width) calc(100% - var(--side-width)), transparent calc(100% - var(--side-width))),
+        var(--surface-dark);
+      overflow: hidden;
+    }
+
+    .stage::before, .stage::after {
+      content: "";
+      position: absolute;
+      left: var(--side-width);
+      width: calc(100% - var(--side-width) * 2);
+      height: 1px;
+      background: rgba(63, 45, 47, 0.65);
+      z-index: 1;
+    }
+    .stage::before { top: 0; }
+    .stage::after { bottom: 0; }
+
+    .side-panel {
+      position: absolute;
+      top: 0;
+      width: var(--side-width);
+      height: 100%;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #632428 0%, #160e28 100%);
+      z-index: 0;
+    }
+    .side-panel-left { left: 0; }
+    .side-panel-right { right: 0; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: var(--page-width);
+      margin: 0 auto;
+      padding: 12px 0;
+    }
+
+    .site-header {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      height: 102px;
+      overflow: hidden;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+
+    .logo-link { display: grid; place-items: center; border-right: 1px solid var(--line); }
+    .logo { width: 84px; height: 84px; display: block; border-radius: 50%; }
+    .header-content { padding: 9px 10px 0; }
+
+    .search-form { display: grid; grid-template-columns: 1fr 138px; gap: 10px; align-items: center; }
+    .search-form input, .search-form button { height: 32px; border-radius: 10px; }
+    .search-form input {
+      width: 100%;
+      border: 1px solid #9b6973;
+      background: transparent;
+      color: var(--text);
+      outline: none;
+      padding: 0 12px;
+    }
+    .search-form input::placeholder { color: #807078; }
+    .search-form button {
+      border: 1px solid #923044;
+      background: #40121e;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .search-form button:hover { transform: scale(1.03); }
+
+    .main-nav { display: flex; align-items: center; gap: 31px; margin-top: 15px; color: #c8b5bd; font-size: 12px; font-weight: 700; }
+    .main-nav a:hover {
+      color: var(--text);
+      background: rgba(62, 37, 36, 0.7);
+}
+
+    .main-nav a { display: inline-grid; place-items: center; min-width: 86px; height: 34px; border-radius: 20px; padding: 0 12px; }
+    .main-nav .active { color: var(--text); background: rgba(62, 37, 36, 0.7); }
+
+    .content-wrap {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      margin-top: 11px;
+      padding: 23px 21px 20px;
+    }
+
+    .section-label { margin: 0 0 10px; color: var(--accent); font-weight: 800; text-transform: lowercase; font-size: 14px; }
+    .content-wrap h1 { margin: 0 0 6px; font-size: 24px; font-weight: 700; }
+    .content-wrap .desc { margin: 0 0 20px; color: var(--muted); font-size: 13px; }
+
+    .auth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .auth-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #210f1e;
+      padding: 13px 19px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-card h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .field input {
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #210f1e;
+      color: var(--text);
+      padding: 0 10px;
+      font-size: 11px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: #9b6973; }
+    .field input::placeholder { color: #635f62; }
+
+    .btn-login {
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid #b7384e;
+      background: var(--accent-strong);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-login:hover { transform: scale(1.03); }
+
+    .btn-register {
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #291325;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-register:hover { transform: scale(1.03); }
+
+    .btn-login, .btn-register {
+  display: grid;
+  place-items: center;
+}
+.page {
+  position: relative; z-index: 1;
+  width: var(--page-width); margin: 0 auto; padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+}
+
+.site-footer { margin-top: auto; }
+
+.perks-wrap {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #1a0b17;
+  margin-top: 11px;
+  padding: 18px 21px;
+}
+
+.perks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.perk-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #210f1e;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.perk-icon { width: 22px; height: 22px; flex-shrink: 0; }
+.perk-title { font-size: 13px; font-weight: 700; }
+.perk-desc { font-size: 12px; color: var(--muted); }
+    .site-footer {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      height: 158px;
+      margin-top: 13px;
+      padding: 16px 21px;
+    }
+    .site-footer h2 { margin-top: 0; font-size: 24px; font-weight: 800; line-height: 1.1; }
+    .site-footer address { margin: -15px 0 0; color: var(--muted); font-style: normal; font-size: 14px; line-height: 1.18; }
+    .site-footer p { margin: 13px 0 0; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <aside class="side-panel side-panel-left" aria-hidden="true"></aside>
+    <aside class="side-panel side-panel-right" aria-hidden="true"></aside>
+
+    <div aria-hidden="true" style="position:absolute;">
+      <img alt="" src="image/light.png" />
+    </div>
+
+    <main class="page">
+      <header class="site-header">
+        <a class="logo-link" href="index.html"><img class="logo" src="image/logo.png" alt="Doramaflix" /></a>
+        <div class="header-content">
+          <form class="search-form">
+            <input placeholder="Найти дораму, жанр или студию" />
+            <button type="button">Найти</button>
+          </form>
+          <nav class="main-nav">
+            <a href="index.html">Главная</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="subcribe.html">Подписка</a>
+            <a class="active" href="login-and-registration.html">Личный кабинет</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="content-wrap">
+        <p class="section-label">аккаунт</p>
+        <h1>Вход и регистрация</h1>
+        <p class="desc">Введите данные, чтобы войти в личный кабинет</p>
+
+        <div class="auth-grid">
+          <!-- Вход -->
+          <div class="auth-card">
+            <h2>Вход</h2>
+            <div class="field">
+              <label>Имя пользователя</label>
+              <input type="text" placeholder="Введите имя пользователя">
+            </div>
+            <div class="field">
+              <label>Пароль</label>
+              <input type="password" placeholder="Введите пароль">
+            </div>
+            <a href="cabinet.html" class="btn-login">Войти</a>
+          </div>
+          <div class="auth-card">
+            <h2>Регистрация</h2>
+            <div class="field">
+              <label>Имя пользователя</label>
+              <input type="text" placeholder="Новое имя пользователя">
+            </div>
+            <div class="field">
+              <label>Пароль</label>
+              <input type="password" placeholder="Новый пароль">
+            </div>
+            <a href="cabinet.html" class="btn-register">Регистрация</a>
+          </div>
+        </div>
+      </section>
+<section class="perks-wrap">
+  <p class="section-label" style="margin:0 0 4px;">что вас ждёт</p>
+  <div class="perks-grid">
+    <div class="perk-item">
+      <svg class="perk-icon" viewBox="0 0 24 24" fill="#b7384e" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01z"/>
+</svg>
+      <div class="perk-title">Полный каталог</div>
+      <div class="perk-desc">Сотни дорам без ограничений с Premium-подпиской</div>
+    </div>
+    <div class="perk-item">
+      <svg class="perk-icon" viewBox="0 0 24 24" fill="#b7384e" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8.5 3.5 12 7l3.5-3.5 1.41 1.41L14 7h4a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h4L7.09 4.91zM6 9v9h12V9z"/>
+</svg>
+      <div class="perk-title">Отзывы и оценки</div>
+      <div class="perk-desc">Оставляйте отзывы и делитесь впечатлениями</div>
+    </div>
+    <div class="perk-item">
+      <svg class="perk-icon" viewBox="0 0 24 24" fill="#b7384e" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2a7 7 0 0 0-7 7v5l-1.5 1.5A1 1 0 0 0 4 17h16a1 1 0 0 0 .71-1.71L19 14V9a7 7 0 0 0-7-7zm0 20a2.5 2.5 0 0 0 2.5-2.5h-5A2.5 2.5 0 0 0 12 22z"/>
+</svg>
+      <div class="perk-title">История просмотров</div>
+      <div class="perk-desc">Продолжайте с того места, где остановились</div>
+    </div>
+  </div>
+</section>
+      <footer class="site-footer">
+        <h2>Контакты</h2>
+        <address>ИП Толстоброва А.А.<br>Иркутск, ул. Красноярская, д. 37, оф. 2<br>Телефон: (6767) 11-03-77<br>E-mail: Doramaflix@mail.ru</address>
+        <p>© 2026 Doramaflix.ru. Все права защищены.</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

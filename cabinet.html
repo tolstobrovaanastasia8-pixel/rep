@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+    :root {
+      --page-width: 872px;
+      --stage-width: 100%;
+      --side-width: 320px;
+      --surface-dark: #150412;
+      --line: #342425;
+      --text: #ffffff;
+      --muted: #bdaeb4;
+      --accent: #ed6c7b;
+      --accent-strong: #bd2c43;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-width: var(--stage-width); min-height: 100%; margin: 0; }
+
+    body {
+      background: var(--surface-dark);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .stage {
+      position: relative;
+      width: var(--stage-width);
+      min-height: 100vh;
+      margin: 0 auto;
+      background:
+        linear-gradient(90deg, transparent 0 var(--side-width), rgba(21, 4, 18, 0.98) var(--side-width) calc(100% - var(--side-width)), transparent calc(100% - var(--side-width))),
+        var(--surface-dark);
+      overflow: hidden;
+    }
+    .stage::before, .stage::after {
+      content: "";
+      position: absolute;
+      left: var(--side-width);
+      width: calc(100% - var(--side-width) * 2);
+      height: 1px;
+      background: rgba(63, 45, 47, 0.65);
+      z-index: 1;
+    }
+    .stage::before { top: 0; }
+    .stage::after { bottom: 0; }
+
+    .side-panel {
+      position: absolute; top: 0;
+      width: var(--side-width); height: 100%;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #632428 0%, #160e28 100%);
+      z-index: 0;
+    }
+    .side-panel-left { left: 0; }
+    .side-panel-right { right: 0; }
+
+    .page { position: relative; z-index: 1; width: var(--page-width); margin: 0 auto; padding: 12px 0; }
+
+    .site-header {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1a0b17;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      height: 102px;
+      overflow: hidden;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+    .logo-link { display: grid; place-items: center; border-right: 1px solid var(--line); }
+    .logo { width: 84px; height: 84px; display: block; border-radius: 50%; }
+    .header-content { padding: 9px 10px 0; }
+
+    .search-form { display: grid; grid-template-columns: 1fr 138px; gap: 10px; align-items: center; }
+    .search-form input, .search-form button { height: 32px; border-radius: 10px; }
+    .search-form input {
+      width: 100%; border: 1px solid #9b6973; background: transparent;
+      color: var(--text); outline: none; padding: 0 12px;
+    }
+    .search-form input::placeholder { color: #807078; }
+    .search-form button {
+      border: 1px solid #923044;
+      background: #40121e;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .search-form button:hover { transform: scale(1.03); }
+
+    .main-nav { display: flex; align-items: center; gap: 31px; margin-top: 15px; color: #c8b5bd; font-size: 12px; font-weight: 700; }
+    .main-nav a { display: inline-grid; place-items: center; min-width: 86px; height: 34px; border-radius: 20px; padding: 0 12px; }
+    .main-nav a:hover { color: var(--text); background: rgba(62, 37, 36, 0.7); }
+    .main-nav .active { color: var(--text); background: rgba(62, 37, 36, 0.7); }
+
+    .content-wrap {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1a0b17;
+      margin-top: 11px;
+      padding: 23px 21px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+    .section-label { margin: 0; color: var(--accent); font-weight: 800; text-transform: lowercase; font-size: 14px; }
+    .content-wrap h1 { margin: 0; font-size: 24px; font-weight: 700; }
+
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #210f1e;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 14px 13px 9px;
+    }
+    .profile-row + .profile-row { border-top: 1px solid var(--line); }
+    .profile-row .label { color: var(--muted); font-size: 14px; }
+    .profile-row .value { font-weight: 600; font-size: 14px; }
+
+    .profile-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px 13px 14px;
+  border-top: 1px solid var(--line);
+}
+    .btn-renew {
+      height: 38px; padding: 0 19px; border-radius: 10px;
+      border: 1px solid #b7384e; background: var(--accent-strong);
+      color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; transition: transform 0.2s;
+    }
+    .btn-renew:hover { transform: scale(1.03); }
+
+    .btn-logout {
+      height: 38px; padding: 0 27px; border-radius: 10px;
+      border: 1px solid var(--line); background: #291325;
+      color: var(--text); font-weight: 700; font-size: 16px; cursor: pointer; transition: transform 0.2s;
+    }
+    .btn-logout:hover { transform: scale(1.03); }
+
+    .btn-renew, .btn-logout {
+  display: grid;
+  place-items: center;
+}
+
+    .auth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .auth-card {
+      border: 1px solid var(--line); border-radius: 10px;
+      background: #210f1e; padding: 13px 19px 16px 18px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .auth-card h2 { margin: 0; font-size: 24px; font-weight: 700; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 13px; color: var(--muted); }
+    .field input {
+      height: 34px; border: 1px solid var(--line); border-radius: 10px;
+      background: #210f1e; color: var(--text); padding: 0 10px;
+      font-size: 11px; outline: none;
+    }
+    .field input:focus { border-color: #9b6973; }
+    .field input::placeholder { color: #635f62; }
+.stats-wrap {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #1a0b17;
+  margin-top: 11px;
+  padding: 18px 21px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.stat-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #210f1e;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-value { font-size: 20px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--muted); }
+    .site-footer {
+      border: 1px solid var(--line); border-radius: 10px;
+      background: #1a0b17; height: 158px; margin-top: 13px; padding: 16px 21px;
+    }
+    .site-footer h2 { margin-top: 0; font-size: 24px; font-weight: 800; line-height: 1.1; }
+    .site-footer address { margin: -15px 0 0; color: var(--muted); font-style: normal; font-size: 14px; line-height: 1.18; }
+    .site-footer p { margin: 13px 0 0; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <aside class="side-panel side-panel-left" aria-hidden="true"></aside>
+    <aside class="side-panel side-panel-right" aria-hidden="true"></aside>
+    <div aria-hidden="true" style="position:absolute;"><img alt="" src="image/light.png"></div>
+
+    <main class="page">
+      <header class="site-header">
+        <a class="logo-link" href="index.html"><img class="logo" src="image/logo.png" alt="Doramaflix"></a>
+        <div class="header-content">
+          <form class="search-form">
+            <input placeholder="Найти дораму, жанр или студию">
+            <button type="button">Найти</button>
+          </form>
+          <nav class="main-nav">
+            <a href="index.html">Главная</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="subcribe.html">Подписка</a>
+            <a class="active" href="cabinet.html">Личный кабинет</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="content-wrap">
+        <p class="section-label">профиль</p>
+        <h1>Добро пожаловать, «НарутоШаринган67»</h1>
+
+        <div class="profile-card">
+          <div class="profile-row">
+            <span class="label">Имя пользователя</span>
+            <span class="value">НарутоШаринган67</span>
+          </div>
+          <div class="profile-row">
+            <span class="label">Статус</span>
+            <span class="value">Premium</span>
+          </div>
+          <div class="profile-row">
+            <span class="label">Подписка активна до</span>
+            <span class="value">31.12.2026</span>
+          </div>
+          <div class="profile-row">
+            <span class="label">Последний просмотр</span>
+            <span class="value">Сказка о 1000 звёзд, эпизод 1</span>
+          </div>
+          <div class="profile-actions">
+            <a href="subcribe.html" class="btn-renew">Продлить подписку</a>
+            <a href="login-and-registration.html" class="btn-logout">Выйти</a>
+          </div>
+        </div>
+      </section>
+      <section class="stats-wrap">
+  <p class="section-label" style="margin:0 0 4px;">моя статистика</p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-value">47</span>
+      <span class="stat-label">Просмотрено эпизодов</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">38</span>
+      <span class="stat-label">Часов за экраном</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">Драма</span>
+      <span class="stat-label">Любимый жанр</span>
+    </div>
+  </div>
+</section>
+      <footer class="site-footer">
+        <h2>Контакты</h2>
+        <address>ИП Толстоброва А.А.<br>Иркутск, ул. Красноярская, д. 37, оф. 2<br>Телефон: (6767) 11-03-77<br>E-mail: Doramaflix@mail.ru</address>
+        <p>© 2026 Doramaflix.ru. Все права защищены.</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

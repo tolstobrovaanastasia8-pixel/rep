@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подписка</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+    :root {
+      --page-width: 872px;
+      --stage-width: 100%;
+      --stage-height: 730px;
+      --side-width: 320px;
+      --surface: #1a0b17;
+      --surface-dark: #150412;
+      --surface-card: #230b1e;
+      --surface-card-soft: #2a1026;
+      --line: #342425;
+      --text: #ffffff;
+      --muted: #bdaeb4;
+      --accent: #ed6c7b;
+      --accent-strong: #bd2c43;
+      --gold: #deb673;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-width: var(--stage-width);
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      background: var(--surface-dark);
+      color: var(--text);
+      font-family: "Inter", Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar, body::-webkit-scrollbar { width: 0; height: 0; }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .stage {
+      position: relative;
+      width: var(--stage-width);
+      min-height: var(--stage-height);
+      margin: 0 auto;
+      background:
+        linear-gradient(90deg, transparent 0 var(--side-width), rgba(21, 4, 18, 0.98) var(--side-width) calc(100% - var(--side-width)), transparent calc(100% - var(--side-width))),
+        var(--surface-dark);
+      overflow: hidden;
+    }
+
+    .stage::before, .stage::after {
+      content: "";
+      position: absolute;
+      left: var(--side-width);
+      width: calc(100% - var(--side-width) * 2);
+      height: 1px;
+      background: rgba(63, 45, 47, 0.65);
+      z-index: 1;
+    }
+    .stage::before { top: 0; }
+    .stage::after { bottom: 0; }
+
+    .side-panel {
+      position: absolute;
+      top: 0;
+      width: var(--side-width);
+      height: 100%;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #632428 0%, #160e28 100%);
+      z-index: 0;
+    }
+    .side-panel-left { left: 0; }
+    .side-panel-right { right: 0; }
+
+    .lantern-field { position: absolute; }
+
+    .page { position: relative; z-index: 1; width: var(--page-width); margin: 0 auto; padding: 12px 0; }
+
+    .site-header {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      height: 102px;
+      overflow: hidden;
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+
+    .logo-link { display: grid; place-items: center; border-right: 1px solid var(--line); }
+    .logo { width: 84px; height: 84px; display: block; border-radius: 50%; }
+    .header-content { padding: 9px 10px 0; }
+
+    .search-form { display: grid; grid-template-columns: 1fr 138px; gap: 10px; align-items: center; }
+    .search-form input, .search-form button { height: 32px; border-radius: 10px; }
+    .search-form input {
+      width: 100%;
+      border: 1px solid #9b6973;
+      background: transparent;
+      color: var(--text);
+      outline: none;
+      padding: 0 12px;
+    }
+    .search-form input::placeholder { color: #807078; }
+    .search-form button {
+      border: 1px solid #923044;
+      background: #40121e;
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .search-form button:hover { transform: scale(1.03); }
+
+    .main-nav { display: flex; align-items: center; gap: 31px; margin-top: 15px; color: #c8b5bd; font-size: 12px; font-weight: 700; }
+    .main-nav a:hover {
+      color: var(--text);
+      background: rgba(62, 37, 36, 0.7);
+}
+
+    .main-nav a { display: inline-grid; place-items: center; min-width: 86px; height: 34px; border-radius: 20px; padding: 0 12px; }
+    .main-nav .active { color: var(--text); background: rgba(62, 37, 36, 0.7); }
+
+    .content-wrap {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      margin-top: 11px;
+      padding: 23px 21px 20px;
+    }
+
+    .section-label { margin: 0 0 10px; color: var(--accent); font-weight: 800; text-transform: lowercase; font-size: 14px; }
+    .content-wrap h1 { margin: 0 0 6px; font-size: 24px; font-weight: 700; }
+    .content-wrap .desc { margin: 0 0 20px; color: var(--muted); font-size: 13px; }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .plan-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #210f1e;
+      padding: 15px 9px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .plan-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+
+    .plan-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 14px;
+    }
+
+    .plan-features {
+      list-style: disc;
+      padding-left: 16px;
+      margin: 0 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      flex: 1;
+    }
+
+    .plan-btn {
+      width: 100%;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid #b7384e;
+      background: var(--accent-strong);
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 36px;
+      transition: transform 0.2s;
+    }
+    .plan-btn:hover {
+      transform: scale(1.03);
+    }
+
+    .modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay:target { display: flex; }
+
+.modal-box {
+  background: #210F1E;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  width: 460px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+.modal-box-success {
+  align-items: center;
+  text-align: center;
+  padding: 48px 40px 36px;
+  gap: 24px;
+}
+.modal-title {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.modal-label {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.modal-input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #291325;
+  color: var(--text);
+  padding: 0 12px;
+  font-size: 13px;
+}
+.modal-input::placeholder { color: #635F62; }
+.modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.modal-col { display: flex; flex-direction: column; gap: 4px; }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+.modal-btn-cancel {
+  height: 38px;
+  padding: 0 22px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #291325;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s;
+}
+.modal-btn-pay {
+  height: 38px;
+  padding: 0 22px;
+  border-radius: 10px;
+  border: 1px solid #bd2b42;
+  background: var(--accent-strong);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s;
+}
+.modal-btn-pay:hover, .modal-btn-cancel:hover {  transform: scale(1.03); }
+.modal-success-text {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  color: var(--text);
+  line-height: 1;
+}
+.page {
+  position: relative; z-index: 1;
+  width: var(--page-width); margin: 0 auto; padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 24px);
+}
+
+.site-footer { margin-top: auto; }
+
+.faq-wrap {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #1a0b17;
+  margin-top: 11px;
+  padding: 18px 21px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #210f1e;
+  padding: 10px 14px;
+}
+
+.faq-q { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+.faq-a { color: var(--muted); font-size: 12px; }
+    .site-footer {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #1A0B17;
+      height: 158px;
+      margin-top: 13px;
+      padding: 16px 21px;
+    }
+    .site-footer h2 { margin-top: 0; font-size: 24px; font-weight: 800; line-height: 1.1; }
+    .site-footer address { margin: -15px 0 0; color: var(--muted); font-style: normal; font-size: 14px; line-height: 1.18; }
+    .site-footer p { margin: 13px 0 0; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <aside class="side-panel side-panel-left" aria-hidden="true"></aside>
+    <aside class="side-panel side-panel-right" aria-hidden="true"></aside>
+
+    <div class="lantern-field" aria-hidden="true">
+      <img class="light-1-icon" alt="" src="image/light.png" />
+    </div>
+
+    <main class="page">
+      <header class="site-header">
+        <a class="logo-link" href="index.html"><img class="logo" src="image/logo.png" alt="Doramaflix" /></a>
+        <div class="header-content">
+          <form class="search-form">
+            <input placeholder="Найти дораму, жанр или студию" />
+            <button type="button">Найти</button>
+          </form>
+          <nav class="main-nav">
+            <a href="index.html">Главная</a>
+            <a href="catalog.html">Каталог</a>
+            <a class="active" href="subcribe.html">Подписка</a>
+            <a href="cabinet.html">Личный кабинет</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="content-wrap">
+        <p class="section-label">premium</p>
+        <h1>Оформление подписки</h1>
+        <p class="desc">Откройте доступ ко всем эпизодам, расписанию и расширенному плееру.</p>
+
+        <div class="plans-grid">
+          <div class="plan-card">
+            <div class="plan-name">Пробная неделя</div>
+            <div class="plan-price">1 ₽</div>
+            <ul class="plan-features">
+              <li>7 дней</li>
+              <li>Полный каталог</li>
+              <li>Без рекламы</li>
+            </ul>
+            <a href="#modal-pay" class="plan-btn">Оформить</a>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">1 месяц</div>
+            <div class="plan-price">399 ₽</div>
+            <ul class="plan-features">
+              <li>30 дней</li>
+              <li>Доступ к новым сериям</li>
+              <li>HD и Full HD</li>
+            </ul>
+            <a href="#modal-pay" class="plan-btn">Оформить</a>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">3 месяца</div>
+            <div class="plan-price">999 ₽</div>
+            <ul class="plan-features">
+              <li>90 дней</li>
+              <li>Выгодная цена</li>
+              <li>Приоритет к новинкам</li>
+            </ul>
+            <a href="#modal-pay" class="plan-btn">Оформить</a>
+          </div>
+
+          <div class="plan-card">
+            <div class="plan-name">1 год</div>
+            <div class="plan-price">3490 ₽</div>
+            <ul class="plan-features">
+              <li>365 дней</li>
+              <li>Максимальная выгода</li>
+              <li>Полный Premium-пакет</li>
+            </ul>
+            <a href="#modal-pay" class="plan-btn">Оформить</a>
+          </div>
+        </div>
+      </section>
+<section class="faq-wrap">
+  <p class="section-label" style="margin:0 0 4px;">частые вопросы</p>
+  <div class="faq-item">
+    <div class="faq-q">Можно ли отменить подписку?</div>
+    <div class="faq-a">Да, в любой момент через личный кабинет. Деньги за неиспользованный период не возвращаются.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">На скольких устройствах можно смотреть?</div>
+    <div class="faq-a">Подписка действует на одном устройстве одновременно.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Есть ли реклама в Premium?</div>
+    <div class="faq-a">Нет, все тарифы включают просмотр без рекламы.</div>
+  </div>
+</section>
+      <footer class="site-footer">
+        <h2>Контакты</h2>
+        <address>ИП Толстоброва А.А.<br>Иркутск, ул. Красноярская, д. 37, оф. 2<br>Телефон: (6767) 11-03-77<br>E-mail: Doramaflix@mail.ru</address>
+        <p>© 2026 Doramaflix.ru. Все права защищены.</p>
+      </footer>
+    </main>
+  </div>
+  <div class="modal-overlay" id="modal-pay">
+  <div class="modal-box">
+    <h2 class="modal-title">Оплата подписки</h2>
+    <label class="modal-label">Имя владельца карты</label>
+    <input class="modal-input" placeholder="Введите имя владельца карты">
+    <label class="modal-label">Номер карты (16 цифр)</label>
+    <input class="modal-input" placeholder="Введите номер карты">
+    <div class="modal-row">
+      <div class="modal-col">
+        <label class="modal-label">Срок действия (MM/YY)</label>
+        <input class="modal-input" placeholder="Введите срок действия">
+      </div>
+      <div class="modal-col">
+        <label class="modal-label">CVV</label>
+        <input class="modal-input" placeholder="Введите CVV">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <a href="#" class="modal-btn-cancel">Отмена</a>
+      <a href="#modal-success" class="modal-btn-pay">Оплатить</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-success">
+  <div class="modal-box modal-box-success">
+    <a href="#" class="modal-close">×</a>
+    <p class="modal-success-text">Подписка успешно оформлена!</p>
+    <a href="cabinet.html" class="modal-btn-pay">Перейти в личный кабинет</a>
+  </div>
+</div>
+</body>
+</html>
